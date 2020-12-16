@@ -74,7 +74,7 @@ def splash_scene():
     # repeat forever, game loop
     while True:
         # Wait for 2 seconds
-        time.sleep(2,0)
+        time.sleep(2.0)
         menu_scene()
 
 def menu_scene():
@@ -216,4 +216,4 @@ def game_scene():
        game.tick()
 
 if __name__ == "__main__":
-    menu_scene()
+    splash_scene()
