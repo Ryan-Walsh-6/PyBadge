@@ -8,10 +8,12 @@ import ugame
 import stage
 import time
 import random
+import board
+import neopixel
 
 import constants
 
-
+    
 def splash_scene():
     # this function is the menu scene
 
@@ -125,6 +127,8 @@ def menu_scene():
 def game_scene():
     # this function is the main game game_scene
 
+   neopixels = neopixel.NeoPixel(board.NEOPIXEL, NEOPIXEL_COUNT, auto_write=False)
+
    # image banks for CircuitPython
    image_bank_bankground = stage.Bank.from_bmp16("space_aliens_background.bmp")
    image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
@@ -174,6 +178,7 @@ def game_scene():
    #   most likely you will only render the background once per game scene
    game.render_block()
 
+   
     # repeat forever, game loop
    while True:
        # get user input
@@ -224,7 +229,7 @@ def game_scene():
                    lasers[laser_number].move(ship.x, ship.y)
                    sound.play(pew_sound)
                    break
-
+               
         # each frame move the lasers, that have been fired up
        for laser_number in range(len(lasers)):
            if lasers[laser_number].x > 0:
@@ -234,10 +239,33 @@ def game_scene():
                if lasers[laser_number].y < constants.OFF_TOP_SCREEN:
                    lasers[laser_number].move(constants.OFF_SCREEN_X,
                                              constants.OFF_SCREEN_Y)
-
+       #Set neopixel to green
+       neopixels[0] = (0, 10, 0)
+       neopixels[1] = (0, 10, 0)
+       neopixels[2] = (0, 10, 0)
+       neopixels[3] = (0, 10, 0)
+       neopixels[4] = (0, 10, 0) 
+ 
+       #Set neopixel to yellow if 4 or less lasers on screen or red if all 5. 
+       for laser_number in range(len(lasers)):
+           if lasers[laser_number].x > 0 and lasers[len(lasers)-1].x < 0:
+               neopixels[0] = (10, 10, 0)
+               neopixels[1] = (10, 10, 0)
+               neopixels[2] = (10, 10, 0)
+               neopixels[3] = (10, 10, 0)
+               neopixels[4] = (10, 10, 0)
+           elif lasers[len(lasers)-1].x > 0:
+               neopixels[0] = (10, 0, 0)
+               neopixels[1] = (10, 0, 0)
+               neopixels[2] = (10, 0, 0)
+               neopixels[3] = (10, 0, 0)
+               neopixels[4] = (10, 0, 0)
+ 
+       neopixels.show()
        # redraw sprites
        game.render_sprites(lasers + [ship] + [alien])
        game.tick()
+      
 
 if __name__ == "__main__":
     splash_scene()
