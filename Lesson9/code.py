@@ -127,7 +127,7 @@ def menu_scene():
 def game_scene():
     # this function is the main game game_scene
 
-   neopixels = neopixel.NeoPixel(board.NEOPIXEL, NEOPIXEL_COUNT, auto_write=False)
+   neopixels = neopixel.NeoPixel(board.NEOPIXEL, constants.NEOPIXEL_COUNT, auto_write=False)
 
    # image banks for CircuitPython
    image_bank_bankground = stage.Bank.from_bmp16("space_aliens_background.bmp")
