@@ -127,7 +127,8 @@ def menu_scene():
 def game_scene():
     # this function is the main game game_scene
 
-   neopixels = neopixel.NeoPixel(board.NEOPIXEL, constants.NEOPIXEL_COUNT, auto_write=False)
+   neopixels = neopixel.NeoPixel(board.NEOPIXEL, constants.NEOPIXEL_COUNT, 
+                                 auto_write=False)
 
    # image banks for CircuitPython
    image_bank_bankground = stage.Bank.from_bmp16("space_aliens_background.bmp")
@@ -219,6 +220,12 @@ def game_scene():
        if keys & ugame.K_DOWN:
            pass 
        
+       #set neopixels to green by default
+       neopixels[0] = (0, 10, 0)
+       neopixels[1] = (0, 10, 0)
+       neopixels[2] = (0, 10, 0)
+       neopixels[3] = (0, 10, 0)
+       neopixels[4] = (0, 10, 0) 
        # update game logic
        # play sound if A was just button_just_pressed
        if a_button == constants.button_state["button_just_pressed"]:
@@ -230,37 +237,29 @@ def game_scene():
                    sound.play(pew_sound)
                    break
                
-        # each frame move the lasers, that have been fired up
+        # each frame move the lasers, that have been fired up and set neopixels 
+        # to yellow when laser is on screen.
        for laser_number in range(len(lasers)):
            if lasers[laser_number].x > 0:
                lasers[laser_number].move(lasers[laser_number].x,
                                           lasers[laser_number].y - 
                                           constants.LASER_SPEED)
+               neopixels[laser_number] = (10, 10, 0)
                if lasers[laser_number].y < constants.OFF_TOP_SCREEN:
                    lasers[laser_number].move(constants.OFF_SCREEN_X,
                                              constants.OFF_SCREEN_Y)
-       #Set neopixel to green
-       neopixels[0] = (0, 10, 0)
-       neopixels[1] = (0, 10, 0)
-       neopixels[2] = (0, 10, 0)
-       neopixels[3] = (0, 10, 0)
-       neopixels[4] = (0, 10, 0) 
- 
-       #Set neopixel to yellow if 4 or less lasers on screen or red if all 5. 
-       for laser_number in range(len(lasers)):
-           if lasers[laser_number].x > 0 and lasers[len(lasers)-1].x < 0:
-               neopixels[0] = (10, 10, 0)
-               neopixels[1] = (10, 10, 0)
-               neopixels[2] = (10, 10, 0)
-               neopixels[3] = (10, 10, 0)
-               neopixels[4] = (10, 10, 0)
-           elif lasers[len(lasers)-1].x > 0:
-               neopixels[0] = (10, 0, 0)
-               neopixels[1] = (10, 0, 0)
-               neopixels[2] = (10, 0, 0)
-               neopixels[3] = (10, 0, 0)
-               neopixels[4] = (10, 0, 0)
- 
+              
+   
+       #Set neopixel to red if all 5 lasers are on screen. 
+       if (neopixels[0] == (10,10,0) and neopixels[1] == (10,10,0) and 
+           neopixels[2] == (10,10,0) and neopixels[3] == (10,10,0) and 
+           neopixels[4] == (10,10,0)):
+           neopixels[0] = (10, 0, 0)
+           neopixels[1] = (10, 0, 0)
+           neopixels[2] = (10, 0, 0)
+           neopixels[3] = (10, 0, 0)
+           neopixels[4] = (10, 0, 0)
+       
        neopixels.show()
        # redraw sprites
        game.render_sprites(lasers + [ship] + [alien])
