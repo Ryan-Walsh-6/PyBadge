@@ -355,6 +355,12 @@ def game_scene():
                     neopixels[4] = (10, 0, 0)
                     neopixels.show()
                     time.sleep(3.0)
+                    neopixels[0] = (0, 0, 0)
+                    neopixels[1] = (0, 0, 0)
+                    neopixels[2] = (0, 0, 0)
+                    neopixels[3] = (0, 0, 0)
+                    neopixels[4] = (0, 0, 0)
+                    neopixels.show()
                     game_over_scene(score)
        # redraw sprites
        neopixels.show()
